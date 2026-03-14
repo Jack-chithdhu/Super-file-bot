@@ -1,0 +1,12 @@
+# --- Bot Core ---
+pyrogram
+TgCrypto
+pyromod==1.5
+python-dotenv
+
+# --- Database ---
+pymongo
+dnspython
+
+# --- Web Response ---
+aiohttp
