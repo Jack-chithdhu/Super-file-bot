@@ -11,7 +11,7 @@ from config import OWNER_ID, ADMINS, START_MSG
 # ═════════════════════════════════════════════════════════════════════════════
 #  MAIN CALLBACK HANDLER
 # ═════════════════════════════════════════════════════════════════════════════
-@Bot.on_callback_query(filters.regex(r"^(about|premium_info|back_home|close|help_menu|user_profile|my_requests|close_my_chat)$"))
+@Bot.on_callback_query(filters.regex(r"^(about|premium_info|back_home|close|help_menu|user_profile|my_requests|close_my_chat|open_settings)$"))
 async def cb_handler(client: Bot, query: CallbackQuery):
     data    = query.data
     user_id = query.from_user.id
@@ -252,6 +252,16 @@ async def cb_handler(client: Bot, query: CallbackQuery):
                 [InlineKeyboardButton("🔒 Close", callback_data="close")]
             ])
         )
+
+    # ── Open Settings ─────────────────────────────────────────────────────────
+    elif data == "open_settings":
+        from config import OWNER_ID
+        if user_id != OWNER_ID and user_id not in ADMINS:
+            await query.answer("❌ Only admins can access settings.", show_alert=True)
+            return
+        await query.answer()
+        from plugins.settings import show_main_settings
+        await show_main_settings(client, query.message.chat.id)
 
     # ── Close My Chat (user ends support session) ────────────────────────────
     elif data == "close_my_chat":
